@@ -1,0 +1,15 @@
+####
+GET http://localhost:8080/api/status 
+
+####
+POST http://localhost:8080/api/turma
+Content-Type: application/json
+
+{
+    "turmaIdOrigem": 10,
+    "codigo": "DIM320",
+    "descricao": "turma de Testes",
+    "periodoCalendario": "2020.1",
+    "sala": "sala 3",
+    "courseId": "sjsdsd"
+}

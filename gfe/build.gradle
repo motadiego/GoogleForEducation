@@ -1,0 +1,64 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.0.RELEASE'
+	id 'java'
+	 id "io.freefair.lombok" version "5.0.0-rc2"
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+group = 'br.com.gfe'
+sourceCompatibility = '1.11'
+
+repositories {
+	mavenCentral()
+}
+
+war {
+    enabled = true
+    baseName = 'gfe'
+}
+
+dependencies {
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
+	
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    
+    compile 'com.google.api-client:google-api-client:1.23.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+    compile 'com.google.apis:google-api-services-classroom:v1-rev135-1.23.0'
+	
+}
+
+ext['tomcat.version'] = '9.0.35'
+ext {
+	buildTimestamp = org.codehaus.groovy.runtime.DateGroovyMethods.format(new Date(), 'yyyyMMddHHmm')
+}
+
+processResources {
+	filesMatching( '**/build.properties' ) {
+		expand( project.properties )
+	}
+
+}
+task ci(dependsOn: ['clean', 'war'])
+
+war.mustRunAfter clean
+
+processResources {
+	filesMatching( '**/build.properties' ) {
+		expand( project.properties )
+	}
+	
+}
+
+configurations {
+    all*.exclude group: '', module: 'servlet-api'
+}
